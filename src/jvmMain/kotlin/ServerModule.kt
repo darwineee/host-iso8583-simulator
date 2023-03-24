@@ -37,10 +37,10 @@ fun Application.configureRouting() {
 fun tryParse(message: String) = try {
     val data = ISO8583.decode(message)
     val log = buildString {
-        append("decoded request message")
+        append("decoded request message:")
         append("\nMTI = ${data.mti}")
         append("\n\nPrimary bitmap = ${data.primaryBitmap.data.bitArrayToBinary()}")
-        append("\n\nSecondary bitmap = ${data.dataElements[0].data.hexToBinary()}")
+        append("\n\nSecondary bitmap = ${data.dataElements[0].data}")
         append("\n")
         for (de in data.dataElements) {
             if (de.indexCode.toInt() == 1) continue

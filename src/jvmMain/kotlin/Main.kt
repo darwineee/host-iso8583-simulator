@@ -2,12 +2,14 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -23,9 +25,11 @@ import kotlinx.coroutines.launch
 fun App() {
     val log by Logger.getLogging().collectAsState()
     var counter by remember { mutableStateOf(0) }
+    var serverPort by remember { mutableStateOf(SERVER_PORT) }
+    var serverAddress by remember { mutableStateOf(SERVER_ADDRESS) }
 
     val server = remember(counter) {
-        embeddedServer(Netty, port = SERVER_PORT, host = SERVER_ADDRESS, module = Application::module)
+        embeddedServer(Netty, port = serverPort, host = serverAddress, module = Application::module)
     }
     val scrollState = rememberScrollState()
 
@@ -78,6 +82,52 @@ fun App() {
             ) {
                 Text("Clear log")
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                modifier = Modifier.width(130.dp),
+                onClick = {
+                    scope.launch {
+                        server.stop()
+                        ++counter
+                    }
+                }
+            ) {
+                Text("Apply")
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            BasicTextField(
+                modifier = Modifier
+                    .width(130.dp)
+                    .drawBehind {
+                        drawRect(color = Color.LightGray)
+                    }
+                    .padding(vertical = 12.dp, horizontal = 6.dp),
+                value = serverAddress,
+                onValueChange = { text ->
+                    serverAddress = text
+                }
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            BasicTextField(
+                modifier = Modifier
+                    .width(130.dp)
+                    .drawBehind {
+                        drawRect(color = Color.LightGray)
+                    }
+                    .padding(vertical = 12.dp, horizontal = 6.dp),
+                value = serverPort.toString(),
+                onValueChange = { text ->
+                    text.toIntOrNull()?.let {
+                        if (it.toString().length < 4) serverPort = it
+                    }
+                }
+            )
         }
 
         SelectionContainer(
@@ -91,7 +141,8 @@ fun App() {
             Text(
                 modifier = Modifier.fillMaxSize(),
                 text = log,
-                color = Color.White
+                color = Color.White,
+//                style = consoleStyle
             )
         }
     }

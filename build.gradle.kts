@@ -37,6 +37,7 @@ kotlin {
                 implementation("ch.qos.logback:logback-classic:$logback_version")
                 implementation("com.soywiz.korlibs.kds:kds:4.0.0-alpha-6")
             }
+            resources.srcDirs("src/jvmMain/resources")
         }
     }
 }
