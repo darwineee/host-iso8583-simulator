@@ -16,7 +16,7 @@ fun Application.configureRouting() {
             Logger.addLog("someone has pinged to the server")
             call.respondText("ISO server is running")
         }
-        post("/authorise") {
+        post("/authorize") {
             val data = call.receiveText()
             Logger.addLog("received message:\n$data")
             tryParse(data)
@@ -37,13 +37,16 @@ fun Application.configureRouting() {
 fun tryParse(message: String) = try {
     val data = ISO8583.decode(message)
     val log = buildString {
+        append("decoded request message")
         append("\nMTI = ${data.mti}")
-        append("\nPrimary bitmap = ${data.primaryBitmap.data.bitArrayToBinary()}")
-        append("\nSecondary bitmap = ${data.dataElements[0].data.hexToBinary()}")
+        append("\n\nPrimary bitmap = ${data.primaryBitmap.data.bitArrayToBinary()}")
+        append("\n\nSecondary bitmap = ${data.dataElements[0].data.hexToBinary()}")
+        append("\n")
         for (de in data.dataElements) {
             if (de.indexCode.toInt() == 1) continue
-            append("\nDE${de.indexCode} = ${de.data}")
+            append("\nDE${de.indexCode} (${de.description}) = ${de.data}")
         }
+        append("\n")
     }
     Logger.addLog(log)
 } catch (e: Exception) {

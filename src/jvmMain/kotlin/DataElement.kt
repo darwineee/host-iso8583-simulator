@@ -70,6 +70,7 @@ sealed class DataElement {
     abstract val length: UShort
     abstract val isFixed: Boolean
     abstract val indexCode: UByte
+    abstract val description: String
 
     /**
      * Save data after decode, or hold raw data to used to encode later
@@ -105,7 +106,7 @@ sealed class DataElement {
     }
 
     fun encode(): String {
-        require(spec.validate(data)) {"DE${indexCode}: data ($data) not valid"}
+        require(spec.validate(data)) { "DE${indexCode}: data ($data) not valid" }
         return if (isFixed) {
             require(data.length == length.toInt()) { "This DE${indexCode} is fixed length $length and the $data is not fit" }
             if (this.spec is DESpec.B) {
@@ -134,6 +135,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Secondary bitmap",
     ) : DataElement()
 
     //Primary account number (PAN)
@@ -143,6 +145,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Primary account number (PAN)",
     ) : DataElement()
 
     //Processing code
@@ -152,6 +155,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Processing code",
     ) : DataElement()
 
     //Amount, transaction
@@ -161,6 +165,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount of transaction",
     ) : DataElement()
 
     //Amount, settlement
@@ -170,6 +175,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount of settlement",
     ) : DataElement()
 
     //Amount, cardholder billing
@@ -179,6 +185,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, cardholder billing",
     ) : DataElement()
 
     //Transmission date & time
@@ -188,6 +195,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Transmission date & time",
     ) : DataElement()
 
     //Amount, cardholder billing fee
@@ -197,6 +205,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, cardholder billing fee",
     ) : DataElement()
 
     //Conversion rate, settlement
@@ -206,6 +215,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Conversion rate, settlement",
     ) : DataElement()
 
     //Conversion rate, cardholder billing
@@ -215,105 +225,117 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Conversion rate, cardholder billing",
     ) : DataElement()
 
-    //Systems trace audit number
+    //System trace audit number (STAN)
     data class DE11(
         override val indexCode: UByte = 11u,
         override val length: UShort = 6U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "System trace audit number (STAN)",
     ) : DataElement()
 
-    //Time, Local transaction (hhmmss)
+    //Local transaction time (hhmmss)
     data class DE12(
         override val indexCode: UByte = 12u,
         override val length: UShort = 6U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Local transaction time (hhmmss)",
     ) : DataElement()
 
-    //Date, Local transaction (MMDD)
+    //Local transaction date (MMDD)
     data class DE13(
         override val indexCode: UByte = 13u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Local transaction date (MMDD)",
     ) : DataElement()
 
-    //Date, expiration
+    //Expiration date (YYMM)
     data class DE14(
         override val indexCode: UByte = 14u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Expiration date (YYMM)",
     ) : DataElement()
 
-    //Date, settlement
+    //Settlement date
     data class DE15(
         override val indexCode: UByte = 15u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Settlement date",
     ) : DataElement()
 
-    //Date, conversion
+    //Currency conversion date
     data class DE16(
         override val indexCode: UByte = 16u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Currency conversion date",
     ) : DataElement()
 
-    //Date, capture
+    //Capture date
     data class DE17(
         override val indexCode: UByte = 17u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Capture date",
     ) : DataElement()
 
-    //Merchant type
+    //Merchant type, or merchant category code
     data class DE18(
         override val indexCode: UByte = 18u,
         override val length: UShort = 4U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Merchant type, or merchant category code"
     ) : DataElement()
 
-    //Acquiring institution country code
+    //Acquiring institution (country code)
     data class DE19(
         override val indexCode: UByte = 19u,
         override val length: UShort = 3U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Acquiring institution (country code)",
     ) : DataElement()
 
-    //PAN Extended, country code
+    //PAN extended (country code)
     data class DE20(
         override val indexCode: UByte = 20u,
         override val length: UShort = 3U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "PAN extended (country code)",
     ) : DataElement()
 
-    //Forwarding institution. country code
+    //Forwarding institution (country code)
     data class DE21(
         override val indexCode: UByte = 21u,
         override val length: UShort = 3U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Forwarding institution (country code)"
     ) : DataElement()
 
     //Point of service entry mode
@@ -323,6 +345,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Point of service entry mode"
     ) : DataElement()
 
     //Application PAN number
@@ -332,15 +355,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Application PAN sequence number"
     ) : DataElement()
 
-    //Function code(ISO 8583:1993)/Network International identifier (NII)
+    //Network International identifier (NII)
     data class DE24(
         override val indexCode: UByte = 24u,
         override val length: UShort = 3U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Network international identifier (NII)"
     ) : DataElement()
 
     //Point of service condition code
@@ -350,6 +375,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Point of service condition code"
     ) : DataElement()
 
     //Point of service capture code
@@ -359,6 +385,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Point of service capture code"
     ) : DataElement()
 
     //Authorizing identification response length
@@ -368,6 +395,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Authorizing identification response length"
     ) : DataElement()
 
     //Amount, transaction fee
@@ -377,6 +405,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, transaction fee"
     ) : DataElement()
 
     //Amount, settlement fee
@@ -386,6 +415,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, settlement fee"
     ) : DataElement()
 
     //Amount, transaction processing fee
@@ -395,6 +425,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, transaction processing fee"
     ) : DataElement()
 
     //Amount, settlement processing fee
@@ -404,6 +435,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Amount, settlement processing fee"
     ) : DataElement()
 
     //Acquiring institution identification code
@@ -413,6 +445,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Acquiring institution identification code"
     ) : DataElement()
 
     //Forwarding institution identification code
@@ -422,15 +455,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Forwarding institution identification code"
     ) : DataElement()
 
     //Primary account number, extended
     data class DE34(
         override val indexCode: UByte = 34u,
         override val length: UShort = 28U,
-        override val spec: DESpec = DESpec.N,
+        override val spec: DESpec = DESpec.NS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Primary account number, extended"
     ) : DataElement()
 
     //Track 2 data
@@ -440,6 +475,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.Z,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Track 2 data"
     ) : DataElement()
 
     //Track 3 data
@@ -449,6 +485,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Track 3 data"
     ) : DataElement()
 
     //Retrieval reference number
@@ -458,6 +495,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Retrieval reference number"
     ) : DataElement()
 
     //Authorization identification response
@@ -467,6 +505,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Authorization identification response"
     ) : DataElement()
 
     //Response code
@@ -476,6 +515,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Response code"
     ) : DataElement()
 
     //Service restriction code
@@ -485,6 +525,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Service restriction code"
     ) : DataElement()
 
     //Card acceptor terminal identification
@@ -494,6 +535,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Card acceptor terminal identification"
     ) : DataElement()
 
     //Card acceptor identification code
@@ -503,15 +545,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Card acceptor identification code"
     ) : DataElement()
 
-    //Card acceptor name/location
+    //Card acceptor name/location (1–23 street address, –36 city, –38 state, 39–40 country)
     data class DE43(
         override val indexCode: UByte = 43u,
         override val length: UShort = 40U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Card acceptor name/location (1–23 street address, –36 city, –38 state, 39–40 country)"
     ) : DataElement()
 
     //Additional response data
@@ -521,6 +565,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Additional response data"
     ) : DataElement()
 
     //Track 1 Data
@@ -530,33 +575,37 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Track 1 Data"
     ) : DataElement()
 
-    //Additional data - ISO
+    //Additional data (ISO)
     data class DE46(
         override val indexCode: UByte = 46u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Additional data (ISO)"
     ) : DataElement()
 
-    //Additional data - National
+    //Additional data (national)
     data class DE47(
         override val indexCode: UByte = 47u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Additional data (national)"
     ) : DataElement()
 
-    //Additional data - Private
+    //Additional data (private)
     data class DE48(
         override val indexCode: UByte = 48u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Additional data (private)"
     ) : DataElement()
 
     //Currency code, transaction
@@ -566,6 +615,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Currency code, transaction"
     ) : DataElement()
 
     //Currency code, settlement
@@ -575,6 +625,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Currency code, settlement"
     ) : DataElement()
 
     //Currency code, cardholder billing
@@ -584,6 +635,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Currency code, cardholder billing"
     ) : DataElement()
 
     //Personal Identification Number data (PIN)
@@ -593,15 +645,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Personal Identification Number data (PIN)"
     ) : DataElement()
 
     //Security related control information
     data class DE53(
         override val indexCode: UByte = 53u,
-        override val length: UShort = 18U,
+        override val length: UShort = 16U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Security related control information"
     ) : DataElement()
 
     //Additional amounts
@@ -611,87 +665,97 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Additional amounts"
     ) : DataElement()
 
-    //Reserved ISO
+    //ICC data – EMV having multiple tags
     data class DE55(
         override val indexCode: UByte = 55u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "ICC data – EMV having multiple tags"
     ) : DataElement()
 
-    //Reserved ISO
+    //Reserved (ISO)
     data class DE56(
         override val indexCode: UByte = 56u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
-    //Reserved National
+    //Reserved (national)
     data class DE57(
         override val indexCode: UByte = 57u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Reserved National
+    //Reserved (national)
     data class DE58(
         override val indexCode: UByte = 58u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Reserved National
+    //Reserved (national)
     data class DE59(
         override val indexCode: UByte = 59u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Advice/reason code (private reserved)
+    //Reserved (national) (e.g. settlement request: batch number, advice transactions: original transaction amount, batch upload: original MTI plus original RRN plus original STAN, etc.)
     data class DE60(
         override val indexCode: UByte = 60u,
-        override val length: UShort = 7U,
-        override val spec: DESpec = DESpec.AN,
+        override val length: UShort = 999U,
+        override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Reserved Private
+    //Reserved (private) (e.g. CVV2/service code   transactions)
     data class DE61(
         override val indexCode: UByte = 61u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Reserved Private
+    //Reserved (private) (e.g. transactions: invoice number, key exchange transactions: TPK key, etc.)
     data class DE62(
         override val indexCode: UByte = 62u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Reserved Private
+    //Reserved (private)
     data class DE63(
         override val indexCode: UByte = 63u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
     //Message authentication code (MAC)
@@ -701,6 +765,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Message authentication code (MAC)"
     ) : DataElement()
 
 //---------------------------Secondary bitmap-----------------------------------------
@@ -713,6 +778,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Ternary bitmap indicator"
     ) : DataElement()
 
     //Settlement code
@@ -722,6 +788,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Settlement code"
     ) : DataElement()
 
     //Extended payment code
@@ -731,6 +798,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Extended payment code"
     ) : DataElement()
 
     //Receiving institution country code
@@ -740,6 +808,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Receiving institution country code"
     ) : DataElement()
 
     //Settlement institution county code
@@ -749,15 +818,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Settlement institution county code"
     ) : DataElement()
 
-    //Network management Information code
+    //Network management information code
     data class DE70(
         override val indexCode: UByte = 70u,
         override val length: UShort = 3U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Network management information code"
     ) : DataElement()
 
     //Message number
@@ -767,33 +838,37 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Message number"
     ) : DataElement()
 
-    //Data record (ISO 8583:1993)
+    //Last message's number
     data class DE72(
         override val indexCode: UByte = 72u,
-        override val length: UShort = 999U,
-        override val spec: DESpec = DESpec.ANS,
+        override val length: UShort = 4U,
+        override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Last message's number"
     ) : DataElement()
 
-    //Date, Action
+    //Action date (YYMMDD)
     data class DE73(
         override val indexCode: UByte = 73u,
         override val length: UShort = 6U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Action date (YYMMDD)"
     ) : DataElement()
 
-    //Credits, number
+    //Number of credits
     data class DE74(
         override val indexCode: UByte = 74u,
         override val length: UShort = 10U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Number of credits"
     ) : DataElement()
 
     //Credits, reversal number
@@ -803,15 +878,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Credits, reversal number"
     ) : DataElement()
 
-    //Debits, number
+    //Number of debits
     data class DE76(
         override val indexCode: UByte = 76u,
         override val length: UShort = 10U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Number of debits"
     ) : DataElement()
 
     //Debits, reversal number
@@ -821,6 +898,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Debits, reversal number"
     ) : DataElement()
 
     //Transfer number
@@ -830,6 +908,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Transfer number"
     ) : DataElement()
 
     //Transfer, reversal number
@@ -839,24 +918,27 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Transfer, reversal number"
     ) : DataElement()
 
-    //Inquiries number
+    //Number of inquiries
     data class DE80(
         override val indexCode: UByte = 80u,
         override val length: UShort = 10U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Number of inquiries"
     ) : DataElement()
 
-    //Authorizations number
+    //Number of authorizations
     data class DE81(
         override val indexCode: UByte = 81u,
         override val length: UShort = 10U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Number of authorizations"
     ) : DataElement()
 
     //Credits, processing fee amount
@@ -866,6 +948,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Credits, processing fee amount"
     ) : DataElement()
 
     //Credits, transaction fee amount
@@ -875,6 +958,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Credits, transaction fee amount"
     ) : DataElement()
 
     //Debits, processing fee amount
@@ -884,6 +968,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Debits, processing fee amount"
     ) : DataElement()
 
     //Debits, transaction fee amount
@@ -893,42 +978,47 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Debits, transaction fee amount"
     ) : DataElement()
 
-    //Credits, amount
+    //Total amount of credits
     data class DE86(
         override val indexCode: UByte = 86u,
-        override val length: UShort = 15U,
+        override val length: UShort = 16U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Total amount of credits"
     ) : DataElement()
 
     //Credits, reversal amount
     data class DE87(
         override val indexCode: UByte = 87u,
-        override val length: UShort = 15U,
+        override val length: UShort = 16U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Credits, reversal amount"
     ) : DataElement()
 
-    //Debits, amount
+    //Total amount of debits
     data class DE88(
         override val indexCode: UByte = 88u,
         override val length: UShort = 15U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Total amount of debits"
     ) : DataElement()
 
     //Debits, reversal amount
     data class DE89(
         override val indexCode: UByte = 89u,
-        override val length: UShort = 15U,
+        override val length: UShort = 16U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Debits, reversal amount"
     ) : DataElement()
 
     //Original data elements
@@ -938,6 +1028,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Original data elements"
     ) : DataElement()
 
     //File update code
@@ -947,6 +1038,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "File update code"
     ) : DataElement()
 
     //File security code
@@ -956,6 +1048,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "File security code"
     ) : DataElement()
 
     //Response indicator
@@ -965,6 +1058,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Response indicator"
     ) : DataElement()
 
     //Service indicator
@@ -974,6 +1068,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Service indicator"
     ) : DataElement()
 
     //Replacement amounts
@@ -983,24 +1078,27 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.AN,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Replacement amounts"
     ) : DataElement()
 
     //Message security code
     data class DE96(
         override val indexCode: UByte = 96u,
-        override val length: UShort = 8U,
-        override val spec: DESpec = DESpec.AN,
+        override val length: UShort = 64U,
+        override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Message security code"
     ) : DataElement()
 
-    //Amount, net settlement
+    //Net settlement amount
     data class DE97(
         override val indexCode: UByte = 97u,
         override val length: UShort = 16U,
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Net settlement amount"
     ) : DataElement()
 
     //Payee
@@ -1010,6 +1108,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Payee"
     ) : DataElement()
 
     //Settlement institution identification code
@@ -1019,6 +1118,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Settlement institution identification code"
     ) : DataElement()
 
     //Receiving institution identification code
@@ -1028,6 +1128,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.N,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Receiving institution identification code"
     ) : DataElement()
 
     //File name
@@ -1037,6 +1138,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "File name"
     ) : DataElement()
 
     //Account identification 1
@@ -1046,6 +1148,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Account identification 1"
     ) : DataElement()
 
     //Account identification 2
@@ -1055,6 +1158,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Account identification 2"
     ) : DataElement()
 
     //Transaction description
@@ -1064,6 +1168,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Transaction description"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1073,6 +1178,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1082,6 +1188,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1091,6 +1198,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1100,6 +1208,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1109,6 +1218,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1118,6 +1228,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
     //Reserved for ISO use
@@ -1127,24 +1238,27 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (ISO)"
     ) : DataElement()
 
-    //Reserved for ISO use
+    //Reserved for national use
     data class DE112(
         override val indexCode: UByte = 112u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Authorizing agent institution id code
+    //Reserved for national use
     data class DE113(
         override val indexCode: UByte = 113u,
-        override val length: UShort = 11U,
-        override val spec: DESpec = DESpec.N,
+        override val length: UShort = 999U,
+        override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1154,6 +1268,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1163,6 +1278,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1172,6 +1288,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1181,6 +1298,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1190,6 +1308,7 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
     //Reserved for national use
@@ -1199,69 +1318,76 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (national)"
     ) : DataElement()
 
-    //Reserved for national use
+    //Reserved for private use
     data class DE120(
         override val indexCode: UByte = 120u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Reserved for national use
+
     data class DE121(
         override val indexCode: UByte = 121u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Reserved for national use
+
     data class DE122(
         override val indexCode: UByte = 122u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Reserved for national use
+
     data class DE123(
         override val indexCode: UByte = 123u,
         override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Info text
+
     data class DE124(
         override val indexCode: UByte = 124u,
-        override val length: UShort = 255U,
+        override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Network management information
     data class DE125(
         override val indexCode: UByte = 125u,
-        override val length: UShort = 50U,
+        override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
     //Issuer trace id
     data class DE126(
         override val indexCode: UByte = 126u,
-        override val length: UShort = 6U,
+        override val length: UShort = 999U,
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
     //Reserved for private use
@@ -1271,15 +1397,17 @@ sealed class DataElement {
         override val spec: DESpec = DESpec.ANS,
         override val isFixed: Boolean = false,
         override var data: String = "",
+        override val description: String = "Reserved (private)"
     ) : DataElement()
 
-    //Message Authentication code
+    //Message authentication code
     data class DE128(
         override val indexCode: UByte = 128u,
         override val length: UShort = 64U,
         override val spec: DESpec = DESpec.B,
         override val isFixed: Boolean = true,
         override var data: String = "",
+        override val description: String = "Message authentication code"
     ) : DataElement()
 
     companion object {
