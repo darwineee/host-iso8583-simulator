@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+val coroutine_version: String by project
 
 plugins {
     kotlin("multiplatform")
@@ -10,7 +11,7 @@ plugins {
 }
 
 group = "com.darwin.dev"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     google()
@@ -47,7 +48,7 @@ compose.desktop {
         mainClass = "MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.darwin.dev.hostiso8583"
+            packageName = "host-ISO-8583-simulator"
             packageVersion = "1.0.0"
         }
     }

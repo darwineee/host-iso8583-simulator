@@ -33,7 +33,7 @@ fun App() {
     }
     val scrollState = rememberScrollState()
 
-    val scope = rememberCoroutineScope { Dispatchers.IO }
+    val serverScope = rememberCoroutineScope { Dispatchers.IO }
 
     LaunchedEffect(log) {
         scrollState.animateScrollTo(scrollState.maxValue)
@@ -52,10 +52,10 @@ fun App() {
             Button(
                 modifier = Modifier.width(130.dp),
                 onClick = {
-                    scope.launch {
+                    serverScope.launch {
                         server.start(true)
                     }
-                    Logger.addLog("server is started at http://$SERVER_ADDRESS:$SERVER_PORT")
+                    Logger.addLog("server is started at http://$serverAddress:$serverPort")
                 }
             ) {
                 Text("Run server")
@@ -64,7 +64,7 @@ fun App() {
             Button(
                 modifier = Modifier.width(130.dp),
                 onClick = {
-                    scope.launch {
+                    serverScope.launch {
                         server.stop()
                     }
                     Logger.addLog("server is shut down")
@@ -88,10 +88,10 @@ fun App() {
             Button(
                 modifier = Modifier.width(130.dp),
                 onClick = {
-                    scope.launch {
+                    serverScope.launch {
                         server.stop()
-                        ++counter
                     }
+                    ++counter
                 }
             ) {
                 Text("Apply")
@@ -124,7 +124,7 @@ fun App() {
                 value = serverPort.toString(),
                 onValueChange = { text ->
                     text.toIntOrNull()?.let {
-                        if (it.toString().length < 4) serverPort = it
+                        if (it.toString().length <= 4) serverPort = it
                     }
                 }
             )
@@ -142,13 +142,20 @@ fun App() {
                 modifier = Modifier.fillMaxSize(),
                 text = log,
                 color = Color.White,
-//                style = consoleStyle
+                style = consoleStyle
             )
         }
     }
 }
 
 fun main() = application {
+    val defaultScope = rememberCoroutineScope { Dispatchers.Default }
+
+    DisposableEffect(Unit) {
+        Logger.init(defaultScope)
+        onDispose { }
+    }
+
     Window(
         onCloseRequest = ::exitApplication,
         title = "Host ISO8583:1987 simulator"

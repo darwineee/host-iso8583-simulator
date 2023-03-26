@@ -4,14 +4,17 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 object Logger {
     private val loggingFlow = MutableStateFlow(AnnotatedString(""))
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private lateinit var coroutineScope: CoroutineScope
+
+    fun init(scope: CoroutineScope) {
+        coroutineScope = scope
+    }
 
     fun getLogging(): StateFlow<AnnotatedString> = loggingFlow
 
