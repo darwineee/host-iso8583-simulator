@@ -37,6 +37,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.517")
                 implementation("ch.qos.logback:logback-classic:$logback_version")
                 implementation("com.soywiz.korlibs.kds:kds:4.0.0-alpha-6")
+                implementation("com.lordcodes.turtle:turtle:0.8.0")
             }
             resources.srcDirs("src/jvmMain/resources")
         }
