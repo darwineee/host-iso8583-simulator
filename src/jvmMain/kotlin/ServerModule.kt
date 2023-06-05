@@ -12,10 +12,13 @@ fun Application.module() {
 
 fun Application.configureRouting() {
     routing {
+        //ping
         get("/") {
             Logger.addLog("someone has pinged to the server")
             call.respondText("ISO server is running")
         }
+
+        //conditional request
         post("/authorize") {
             val data = call.receiveText()
             Logger.addLog("received message:\n$data")
@@ -30,6 +33,22 @@ fun Application.configureRouting() {
 
                 }
             }
+        }
+
+        //fixed request response
+        post("/payments") {
+            val data = call.receiveText()
+            Logger.addLog("received message:\n$data")
+            tryParse(data)
+            val response = getAuthoriseSuccessRsp()
+            call.respondText(response)
+        }
+
+        post("/transactions") {
+            val data = call.receiveText()
+            Logger.addLog("received message:\n$data")
+            val response = getCreateTxnSuccessRsp()
+            call.respondText(response)
         }
     }
 }

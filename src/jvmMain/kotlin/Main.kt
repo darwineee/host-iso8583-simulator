@@ -217,7 +217,7 @@ fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Host ISO8583:1987 simulator",
+        title = "Host simulator",
         state = rememberWindowState(width = 1000.dp, height = 600.dp, position = WindowPosition.Aligned(Alignment.Center))
     ) { App() }
 }
